@@ -121,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-// C语言入口 main
+// 入口 main
 int main() {
     WNDCLASSW wc = {0};
     wc.lpfnWndProc = WndProc;
@@ -148,7 +148,7 @@ int main() {
 
     // 注册全局热键 F8
     if (!RegisterHotKey(hWndMain, 1, 0, VK_F8)) {
-        MessageBoxW(NULL, L"鼠标连点器已启动。", L"启动", MB_ICONERROR);
+        MessageBoxW(NULL, L"鼠标连点器已启动。", L"提示窗口", MB_ICONERROR);
         return 0;
     }
 
