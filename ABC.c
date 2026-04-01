@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <shellapi.h>
 
 #define TIMER_ID 100
 #define WM_TRAYICON (WM_USER + 1)
@@ -6,7 +7,7 @@
 BOOL running = FALSE;
 HWND hWndMain;
 HWND hStatus;
-NOTIFYICONDATA nid = {0};
+NOTIFYICONDATAW nid = {0}; // 使用 Unicode 版本
 
 // 模拟左右键点击
 void ClickMouse() {
@@ -104,7 +105,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             break;
 
         case WM_CLOSE:
-            ShowWindow(hwnd, SW_HIDE); // 最小化隐藏
+            DestroyWindow(hwnd); // 右键退出真正销毁窗口
             break;
 
         case WM_DESTROY:
@@ -120,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-// **C语言入口 main**
+// C语言入口 main
 int main() {
     WNDCLASSW wc = {0};
     wc.lpfnWndProc = WndProc;
@@ -152,13 +153,13 @@ int main() {
     }
 
     // 托盘图标
-    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.cbSize = sizeof(NOTIFYICONDATAW);
     nid.hWnd = hWndMain;
     nid.uID = 1;
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = WM_TRAYICON;
     nid.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wcscpy(nid.szTip, L"鼠标连点器");
+    wcscpy(nid.szTip, L"鼠标连点器"); // Unicode 字符串
     Shell_NotifyIconW(NIM_ADD, &nid);
 
     ShowWindow(hWndMain, SW_HIDE); // 程序启动时隐藏窗口
